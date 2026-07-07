@@ -31,6 +31,7 @@ static int open(struct inode *inode, struct file *filp) {
   file->s=(char *)kmalloc(strlen(device.s)+1,GFP_KERNEL);
   if (!file->s) {
     printk(KERN_ERR "%s: kmalloc() failed\n",DEVNAME);
+    kfree(file);
     return -ENOMEM;
   }
   strcpy(file->s,device.s);
@@ -54,7 +55,7 @@ static ssize_t read(struct file *filp,
   n=(n<count ? n : count);
   if (copy_to_user(buf,file->s,n)) {
     printk(KERN_ERR "%s: copy_to_user() failed\n",DEVNAME);
-    return 0;
+    return -EFAULT;
   }
   return n;
 }
@@ -85,6 +86,7 @@ static int __init my_init(void) {
   err=alloc_chrdev_region(&device.devno,0,1,DEVNAME);
   if (err<0) {
     printk(KERN_ERR "%s: alloc_chrdev_region() failed\n",DEVNAME);
+    kfree(device.s);
     return err;
   }
   cdev_init(&device.cdev,&ops);
@@ -92,6 +94,8 @@ static int __init my_init(void) {
   err=cdev_add(&device.cdev,device.devno,1);
   if (err) {
     printk(KERN_ERR "%s: cdev_add() failed\n",DEVNAME);
+    unregister_chrdev_region(device.devno,1);
+    kfree(device.s);
     return err;
   }
   printk(KERN_INFO "%s: init\n",DEVNAME);
