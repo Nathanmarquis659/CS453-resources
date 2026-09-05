@@ -5,7 +5,7 @@
 #include "deq.h"
 #include "error.h"
 
-// indices and size of array of node pointers
+// indices and size of array of node pointers; 0,1,2
 typedef enum {Head,Tail,Ends} End;
 
 typedef struct Node {
@@ -23,10 +23,49 @@ static Rep rep(Deq q) {
   return (Rep)q;
 }
 
-static void put(Rep r, End e, Data d) {}
-static Data ith(Rep r, End e, int i)  { return 0; }
-static Data get(Rep r, End e)         { return 0; }
-static Data rem(Rep r, End e, Data d) { return 0; }
+// depending on 'end', append the provided data
+static void put(Rep r, End e, Data d)
+{
+  // Create Node from Data
+      // Set Node->np head/tail = 0
+      // Set Data = Data
+  // if Rep length is 0
+      // Rep->ht[Head] points to Node
+      // Rep->ht[Tail] points to Node
+  // else
+      // Rep->ht[End]->np[End] points to Node
+      // Node->np[InverseEnd] points to Rep->ht[End]
+      // Rep->ht[End] points to Node (Node is now the new End)
+  // Rep length ++
+}
+static Data ith(Rep r, End e, int i)
+{
+
+  return 0;
+}
+static Data get(Rep r, End e)
+{
+  // if Rep length = 0
+      // return 0
+  // oldNode = pointer to Rep->ht[End]
+  // oldData = oldNode->data
+  // if Rep length = 1
+      // Rep->ht[Head] = 0
+      // Rep->ht[Tail] = 0
+  // else
+      // Rep->ht[End]->np[InverseEnd]->np[End] = 0 (Get End, find previous Node and set it's End to 00
+      // Rep->ht[End] points to Rep->ht[End]->np[InverseEnd] (Assign previous Node as the new End)
+  // Rep length --
+  // free(oldNode)
+  // return oldData
+
+  return 0; // FIXME placeholder
+}
+static Data rem(Rep r, End e, Data d)
+{
+
+  return 0;
+}
 
 extern Deq deq_new() {
   Rep r=(Rep)malloc(sizeof(*r));
