@@ -1,12 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "deq.h"
 #include "error.h"
 
 // indices and size of array of node pointers; 0,1,2
 typedef enum {Head,Tail,Ends} End;
+
+// Helper function to get the Inverse end (i.e. Head and Tail)
+static int inverseEnd(int e)
+{
+  if (e == Head) return Tail;
+  if (e == Tail) return Head;
+  else return -1;
+}
 
 typedef struct Node {
   struct Node *np[Ends];        // next/prev neighbors
@@ -23,25 +30,52 @@ static Rep rep(Deq q) {
   return (Rep)q;
 }
 
-// depending on 'end', append the provided data
 static void put(Rep r, End e, Data d)
 {
   // Create Node from Data
-      // Set Node->np head/tail = 0
-      // Set Data = Data
+  Node newNode = (Node)malloc(sizeof(*newNode));
+  if (!newNode) ERROR("malloc() failed");
+  // Set Node->np head/tail = 0
+  newNode->np[Head] = 0;
+  newNode->np[Tail] = 0;
+  // Set Data = Data
+  newNode->data = d;
   // if Rep length is 0
-      // Rep->ht[Head] points to Node
-      // Rep->ht[Tail] points to Node
+  if (r->len == 0)
+  {
+    // Rep->ht[Head] points to Node
+    r->ht[Head] = newNode;
+    // Rep->ht[Tail] points to Node
+    r->ht[Tail] = newNode;
+  }
   // else
-      // Rep->ht[End]->np[End] points to Node
-      // Node->np[InverseEnd] points to Rep->ht[End]
-      // Rep->ht[End] points to Node (Node is now the new End)
+  else {
+    // Rep->ht[End]->np[End] points to Node (last element now points to Node)
+    r->ht[e]->np[e] = newNode;
+    // Node->np[InverseEnd] points to Rep->ht[End]
+    newNode->np[inverseEnd(e)] = r->ht[e];
+    // Rep->ht[End] points to Node (Node is now the new End)
+    r->ht[e] = newNode;
+  }
   // Rep length ++
+  r->len++;
 }
 static Data ith(Rep r, End e, int i)
 {
+  // Check if index > length-1 (out of bounds)
+  if (i > r->len - 1)
+  {
+    ERROR("Out of bounds index");
+  }
 
-  return 0;
+  Node n = r->ht[e];
+  // From end, move inward for index steps
+  for (int j = 0; j < i; j++)
+  {
+    n = n->np[inverseEnd(e)];
+  }
+  // Return Node->data at index
+  return n->data;
 }
 static Data get(Rep r, End e)
 {
@@ -63,6 +97,10 @@ static Data get(Rep r, End e)
 }
 static Data rem(Rep r, End e, Data d)
 {
+  // if length = 0
+      // return 0
+  // oldNode = pointer to Rep->ht[End] ??
+  // oldData = oldNode->data ??
 
   return 0;
 }
