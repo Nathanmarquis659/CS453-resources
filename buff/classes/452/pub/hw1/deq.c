@@ -60,12 +60,13 @@ static void put(Rep r, End e, Data d)
   // Rep length ++
   r->len++;
 }
+
 static Data ith(Rep r, End e, int i)
 {
   // Check if index > length-1 (out of bounds)
-  if (i > r->len - 1)
+  if (i > r->len - 1 || i < 0)
   {
-    ERROR("Out of bounds index");
+    return 0;
   }
 
   Node n = r->ht[e];
@@ -77,32 +78,85 @@ static Data ith(Rep r, End e, int i)
   // Return Node->data at index
   return n->data;
 }
+
 static Data get(Rep r, End e)
 {
-  // if Rep length = 0
-      // return 0
-  // oldNode = pointer to Rep->ht[End]
-  // oldData = oldNode->data
+  // Check if length is 0
+  if (r->len == 0) return 0;
+  // lastNode = pointer to Rep->ht[End]
+  Node lastNode = r->ht[e];
+  Node prevNode = r->ht[e]->np[inverseEnd(e)];
+  // oldData = lastNode->data
+  Data oldData = lastNode->data;
   // if Rep length = 1
-      // Rep->ht[Head] = 0
-      // Rep->ht[Tail] = 0
-  // else
-      // Rep->ht[End]->np[InverseEnd]->np[End] = 0 (Get End, find previous Node and set it's End to 00
-      // Rep->ht[End] points to Rep->ht[End]->np[InverseEnd] (Assign previous Node as the new End)
+  if (r->len == 1)
+  {
+    // Rep->ht[Head] = 0
+    r->ht[Head] = 0;
+    // Rep->ht[Tail] = 0
+    r->ht[Tail] = 0;
+  }
+  else
+  {
+    // Rep->ht[End]->np[InverseEnd]->np[End] = 0 (Get End Node -> find previous Node ->  prevNode = End and references 0)
+    prevNode->np[e] = 0;
+    // Rep->ht[End] points to Rep->ht[End]->np[InverseEnd] (Assign previous Node as the new End)
+    r->ht[e] = prevNode;
+  }
   // Rep length --
+  r->len--;
   // free(oldNode)
+  free(lastNode);
   // return oldData
-
-  return 0; // FIXME placeholder
+  return oldData;
 }
+
 static Data rem(Rep r, End e, Data d)
 {
-  // if length = 0
-      // return 0
-  // oldNode = pointer to Rep->ht[End] ??
-  // oldData = oldNode->data ??
+  // if length = 0 return 0
+  if (r->len == 0) return 0;
 
-  return 0;
+  Node n = r->ht[e];
+  // From end, move inward for index steps
+  while (n && n->data != d)
+  {
+    n = n->np[inverseEnd(e)];
+  }
+  if (!n) return 0; // Element not found
+
+    if (n == r->ht[Head] && n == r->ht[Tail]) // This means we are the only node, cleanup to length 0
+    {
+      // Rep->ht = 0 for head and tail
+      r->ht[Head] = 0;
+      r->ht[Tail] = 0;
+    } else if (n == r->ht[Head]) // This means n is head
+    {
+      // r->ht[Head] = next
+      r->ht[Head] = n->np[Tail];
+      // next->np[Head] = 0
+      r->ht[Head]->np[Head] = 0;
+    } else if (n == r->ht[Tail]) // This means n is tail
+    {
+      // r->ht[Tail] = prev
+      r->ht[Tail] = n->np[Head];
+      // prev->np[Tail] = 0
+      r->ht[Tail]->np[Tail] = 0;
+    } else // n is in the middle; not head or tail
+    {
+      // prev->np[Tail] = next
+      n->np[Head]->np[Tail] = n->np[Tail];
+      // next->np[Head] = tail
+      n->np[Tail]->np[Head] = n->np[Head];
+    }
+
+  // r length --
+  r->len--;
+  // Save n_data from n
+  Data n_data = n->data;
+  // Free n
+  free(n);
+  // return n_data
+  return n_data;
 }
 
 extern Deq deq_new() {
