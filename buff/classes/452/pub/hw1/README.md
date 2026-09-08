@@ -159,3 +159,4 @@ rather than duplicated logic.
 * Course lecture notes and the assignment specification (`hw.pdf`) for
   this project.
 * Skeleton and reference files provided in `pub/hw1`.
+* Claude Sonnet 5 for questions about implementation, and also to aid with documentation and the test suite in main
