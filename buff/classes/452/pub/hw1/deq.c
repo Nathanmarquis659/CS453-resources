@@ -114,7 +114,7 @@ static Data get(Rep r, End e)
 static Data rem(Rep r, End e, Data d)
 {
   // if length = 0 return 0
-  if (r->len == 0) ERROR("zero pointer");
+  if (r->len == 0) return 0;
 
   Node n = r->ht[e];
   // From end, move inward for index steps

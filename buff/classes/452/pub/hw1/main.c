@@ -55,7 +55,7 @@ int main() {
   EXPECT_ERROR(deq_head_get(q), "head_get on empty deque is fatal");
   EXPECT_ERROR(deq_tail_get(q), "tail_get on empty deque is fatal");
   EXPECT_ERROR(deq_head_ith(q, 0), "head_ith(0) on empty deque is fatal");
-  EXPECT_ERROR(deq_head_rem(q, (Data)(long)1), "rem on empty deque is fatal");
+  CHECK(deq_head_rem(q, (Data)(long)1) == 0, "rem on empty deque returns 0");
   deq_del(q, 0);
 
   // ---------------------------------------------------------------
