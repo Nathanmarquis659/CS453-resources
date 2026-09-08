@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include "deq.h"
 
 static int pass_count = 0;
@@ -9,6 +12,27 @@ static int fail_count = 0;
 #define CHECK(cond, msg) do { \
   if (cond) { pass_count++; printf("PASS: %s\n", msg); } \
   else      { fail_count++; printf("FAIL: %s\n", msg); } \
+} while (0)
+
+// Runs `stmt` in a forked child. PASS if the child is killed by the
+// library's ERROR() (exit(1)), meaning `stmt` correctly violated a
+// documented precondition (empty deque, out-of-range index, etc).
+// FAIL if the child instead returns normally (exit 0) -- that means
+// the library silently tolerated input it was supposed to reject.
+#define EXPECT_ERROR(stmt, msg) do {                                       \
+  fflush(stdout);                                                          \
+  pid_t _pid = fork();                                                     \
+  if (_pid == 0) {                                                         \
+    int devnull = open("/dev/null", O_WRONLY);                            \
+    if (devnull >= 0) dup2(devnull, STDERR_FILENO); /* hush ERROR() text */ \
+    (void)(stmt);                                                          \
+    _exit(0); /* only reached if it did NOT error out */                   \
+  }                                                                         \
+  int _status;                                                             \
+  waitpid(_pid, &_status, 0);                                              \
+  int _died = WIFEXITED(_status) && WEXITSTATUS(_status) != 0;             \
+  if (_died) { pass_count++; printf("PASS: %s\n", msg); }                  \
+  else       { fail_count++; printf("FAIL: %s\n", msg); }                  \
 } while (0)
 
 // helper: stringify an integer stored as Data, for deq_str tests
@@ -23,14 +47,15 @@ int main() {
   long got;
 
   // ---------------------------------------------------------------
-  // 1. Empty deque behavior
+  // 1. Empty deque behavior -- get/ith/rem on an empty deque are
+  //    documented caller errors: must abort via ERROR(), not return 0.
   // ---------------------------------------------------------------
   q = deq_new();
   CHECK(deq_len(q) == 0, "new deque has len 0");
-  CHECK(deq_head_get(q) == 0, "head_get on empty returns 0");
-  CHECK(deq_tail_get(q) == 0, "tail_get on empty returns 0");
-  CHECK(deq_head_ith(q, 0) == 0, "head_ith(0) on empty returns 0");
-  CHECK(deq_head_rem(q, (Data)(long)1) == 0, "rem on empty returns 0");
+  EXPECT_ERROR(deq_head_get(q), "head_get on empty deque is fatal");
+  EXPECT_ERROR(deq_tail_get(q), "tail_get on empty deque is fatal");
+  EXPECT_ERROR(deq_head_ith(q, 0), "head_ith(0) on empty deque is fatal");
+  EXPECT_ERROR(deq_head_rem(q, (Data)(long)1), "rem on empty deque is fatal");
   deq_del(q, 0);
 
   // ---------------------------------------------------------------
@@ -87,13 +112,13 @@ int main() {
   CHECK((long)deq_head_ith(q, 2) == 30, "head_ith(2) == 30");
   CHECK((long)deq_tail_ith(q, 0) == 30, "tail_ith(0) == 30");
   CHECK((long)deq_tail_ith(q, 2) == 10, "tail_ith(2) == 10");
-  CHECK(deq_head_ith(q, 3) == 0, "head_ith(len) out of range returns 0");
-  CHECK(deq_head_ith(q, -1) == 0, "head_ith(-1) negative returns 0");
+  EXPECT_ERROR(deq_head_ith(q, 3), "head_ith(len) out of range is fatal");
+  EXPECT_ERROR(deq_head_ith(q, -1), "head_ith(-1) negative index is fatal");
   CHECK(deq_len(q) == 3, "ith() does not mutate the deque");
   deq_del(q, 0);
 
   // ---------------------------------------------------------------
-  // 6. rem() — head, tail, middle, not-found, single-node
+  // 6. rem() -- head, tail, middle, not-found, single-node
   // ---------------------------------------------------------------
   q = deq_new();
   deq_tail_put(q, (Data)(long)1);
@@ -102,6 +127,9 @@ int main() {
   deq_tail_put(q, (Data)(long)4);
   // list is now 1 <-> 2 <-> 3 <-> 4 (head=1, tail=4)
 
+  // NOT a precondition violation -- the value legitimately isn't there.
+  // If this turns out to also abort against libdeq.so, swap it to
+  // EXPECT_ERROR after confirming against the spec.
   CHECK(deq_head_rem(q, (Data)(long)99) == 0, "rem: value not present returns 0");
   CHECK(deq_len(q) == 4, "rem: failed removal does not change len");
 
@@ -121,7 +149,7 @@ int main() {
   got = (long)deq_head_rem(q, (Data)(long)2);
   CHECK(got == 2, "rem: remove last remaining node returns 2");
   CHECK(deq_len(q) == 0, "rem: len==0 after removing last node");
-  CHECK(deq_head_get(q) == 0, "rem: deque behaves empty after draining via rem");
+  EXPECT_ERROR(deq_head_get(q), "get after draining via rem is fatal (empty deque)");
   deq_del(q, 0);
 
   // ---------------------------------------------------------------

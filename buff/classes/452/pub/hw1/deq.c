@@ -66,7 +66,7 @@ static Data ith(Rep r, End e, int i)
   // Check if index > length-1 (out of bounds)
   if (i > r->len - 1 || i < 0)
   {
-    return 0;
+    ERROR("Index out of bounds");
   }
 
   Node n = r->ht[e];
@@ -82,7 +82,7 @@ static Data ith(Rep r, End e, int i)
 static Data get(Rep r, End e)
 {
   // Check if length is 0
-  if (r->len == 0) return 0;
+  if (r->len == 0) ERROR("Empty queue");
   // lastNode = pointer to Rep->ht[End]
   Node lastNode = r->ht[e];
   Node prevNode = r->ht[e]->np[inverseEnd(e)];
