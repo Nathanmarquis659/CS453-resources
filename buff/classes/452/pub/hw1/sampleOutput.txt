@@ -1,0 +1,370 @@
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ make clean
+GNUmakefile:9: warning: overriding recipe for target 'valgrind'
+../GNUmakefile:26: warning: ignoring old recipe for target 'valgrind'
+rm -f deq *.o *.d *.i try
+rm -f deq *.o *.d *.i try
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis =)$ clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mnathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis =)$ make
+GNUmakefile:9: warning: overriding recipe for target 'valgrind'
+../GNUmakefile:26: warning: ignoring old recipe for target 'valgrind'
+gcc -o main.o -c main.c -g -Wall -MMD -D_GNU_SOURCE
+gcc -o deq.o -c deq.c -g -Wall -MMD -D_GNU_SOURCE
+gcc -o deq main.o deq.o -g
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ ./deq
+PASS: new deque has len 0
+PASS: head_get on empty deque is fatal
+PASS: tail_get on empty deque is fatal
+PASS: head_ith(0) on empty deque is fatal
+PASS: rem on empty deque returns 0
+PASS: len==1 after one head_put
+PASS: head_put then head_get returns same value
+PASS: len==0 after removing only element
+PASS: tail_put then tail_get returns same value
+PASS: FIFO: first out is 1
+PASS: FIFO: second out is 2
+PASS: FIFO: third out is 3
+PASS: len==0 after draining FIFO
+PASS: LIFO: first out is 3
+PASS: LIFO: second out is 2
+PASS: LIFO: third out is 1
+PASS: head_ith(0) == 10
+PASS: head_ith(1) == 20
+PASS: head_ith(2) == 30
+PASS: tail_ith(0) == 30
+PASS: tail_ith(2) == 10
+PASS: head_ith(len) out of range is fatal
+PASS: head_ith(-1) negative index is fatal
+PASS: ith() does not mutate the deque
+PASS: rem: value not present returns 0
+PASS: rem: failed removal does not change len
+PASS: rem: remove head value returns 1
+PASS: rem: new head is 2 after removing old head
+PASS: rem: remove tail value returns 4
+PASS: rem: new tail is 3 after removing old tail
+PASS: rem: remove middle-ish value returns 3
+PASS: rem: len==1 after removing down to one node
+PASS: rem: remove last remaining node returns 2
+PASS: rem: len==0 after removing last node
+PASS: get after draining via rem is fatal (empty deque)
+PASS: interleave: index0==1
+PASS: interleave: index1==2
+PASS: interleave: index2==3
+PASS: interleave: index3==4
+PASS: deq_str produces "7 8 9"
+deq_str result: "7 8 9"
+
+===== 40 PASSED, 0 FAILED =====
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ make try
+GNUmakefile:9: warning: overriding recipe for target 'valgrind'
+../GNUmakefile:26: warning: ignoring old recipe for target 'valgrind'
+gcc -o try main.o -L. -ldeq -Wl,-rpath=.
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ ./try
+PASS: new deque has len 0
+PASS: head_get on empty deque is fatal
+PASS: tail_get on empty deque is fatal
+PASS: head_ith(0) on empty deque is fatal
+PASS: rem on empty deque returns 0
+PASS: len==1 after one head_put
+PASS: head_put then head_get returns same value
+PASS: len==0 after removing only element
+PASS: tail_put then tail_get returns same value
+PASS: FIFO: first out is 1
+PASS: FIFO: second out is 2
+PASS: FIFO: third out is 3
+PASS: len==0 after draining FIFO
+PASS: LIFO: first out is 3
+PASS: LIFO: second out is 2
+PASS: LIFO: third out is 1
+PASS: head_ith(0) == 10
+PASS: head_ith(1) == 20
+PASS: head_ith(2) == 30
+PASS: tail_ith(0) == 30
+PASS: tail_ith(2) == 10
+PASS: head_ith(len) out of range is fatal
+PASS: head_ith(-1) negative index is fatal
+PASS: ith() does not mutate the deque
+PASS: rem: value not present returns 0
+PASS: rem: failed removal does not change len
+PASS: rem: remove head value returns 1
+PASS: rem: new head is 2 after removing old head
+PASS: rem: remove tail value returns 4
+PASS: rem: new tail is 3 after removing old tail
+PASS: rem: remove middle-ish value returns 3
+PASS: rem: len==1 after removing down to one node
+PASS: rem: remove last remaining node returns 2
+PASS: rem: len==0 after removing last node
+PASS: get after draining via rem is fatal (empty deque)
+PASS: interleave: index0==1
+PASS: interleave: index1==2
+PASS: interleave: index2==3
+PASS: interleave: index3==4
+PASS: deq_str produces "7 8 9"
+deq_str result: "7 8 9"
+
+===== 40 PASSED, 0 FAILED =====
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ make valgrind
+GNUmakefile:9: warning: overriding recipe for target 'valgrind'
+../GNUmakefile:26: warning: ignoring old recipe for target 'valgrind'
+valgrind --leak-check=full --show-leak-kinds=all ./deq
+==3326285== Memcheck, a memory error detector
+==3326285== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3326285== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3326285== Command: ./deq
+==3326285==
+PASS: new deque has len 0
+==3326286==
+==3326286== HEAP SUMMARY:
+==3326286==     in use at exit: 24 bytes in 1 blocks
+==3326286==   total heap usage: 2 allocs, 1 frees, 1,048 bytes allocated
+==3326286==
+==3326286== 24 bytes in 1 blocks are still reachable in loss record 1 of 1
+==3326286==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326286==    by 0x402D2A: deq_new (deq.c:163)
+==3326286==    by 0x401279: main (main.c:53)
+==3326286==
+==3326286== LEAK SUMMARY:
+==3326286==    definitely lost: 0 bytes in 0 blocks
+==3326286==    indirectly lost: 0 bytes in 0 blocks
+==3326286==      possibly lost: 0 bytes in 0 blocks
+==3326286==    still reachable: 24 bytes in 1 blocks
+==3326286==         suppressed: 0 bytes in 0 blocks
+==3326286==
+==3326286== For lists of detected and suppressed errors, rerun with: -s
+==3326286== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: head_get on empty deque is fatal
+==3326290==
+==3326290== HEAP SUMMARY:
+==3326290==     in use at exit: 24 bytes in 1 blocks
+==3326290==   total heap usage: 2 allocs, 1 frees, 1,048 bytes allocated
+==3326290==
+==3326290== 24 bytes in 1 blocks are still reachable in loss record 1 of 1
+==3326290==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326290==    by 0x402D2A: deq_new (deq.c:163)
+==3326290==    by 0x401279: main (main.c:53)
+==3326290==
+==3326290== LEAK SUMMARY:
+==3326290==    definitely lost: 0 bytes in 0 blocks
+==3326290==    indirectly lost: 0 bytes in 0 blocks
+==3326290==      possibly lost: 0 bytes in 0 blocks
+==3326290==    still reachable: 24 bytes in 1 blocks
+==3326290==         suppressed: 0 bytes in 0 blocks
+==3326290==
+==3326290== For lists of detected and suppressed errors, rerun with: -s
+==3326290== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: tail_get on empty deque is fatal
+==3326294==
+==3326294== HEAP SUMMARY:
+==3326294==     in use at exit: 24 bytes in 1 blocks
+==3326294==   total heap usage: 2 allocs, 1 frees, 1,048 bytes allocated
+==3326294==
+==3326294== 24 bytes in 1 blocks are still reachable in loss record 1 of 1
+==3326294==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326294==    by 0x402D2A: deq_new (deq.c:163)
+==3326294==    by 0x401279: main (main.c:53)
+==3326294==
+==3326294== LEAK SUMMARY:
+==3326294==    definitely lost: 0 bytes in 0 blocks
+==3326294==    indirectly lost: 0 bytes in 0 blocks
+==3326294==      possibly lost: 0 bytes in 0 blocks
+==3326294==    still reachable: 24 bytes in 1 blocks
+==3326294==         suppressed: 0 bytes in 0 blocks
+==3326294==
+==3326294== For lists of detected and suppressed errors, rerun with: -s
+==3326294== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: head_ith(0) on empty deque is fatal
+PASS: rem on empty deque returns 0
+PASS: len==1 after one head_put
+PASS: head_put then head_get returns same value
+PASS: len==0 after removing only element
+PASS: tail_put then tail_get returns same value
+PASS: FIFO: first out is 1
+PASS: FIFO: second out is 2
+PASS: FIFO: third out is 3
+PASS: len==0 after draining FIFO
+PASS: LIFO: first out is 3
+PASS: LIFO: second out is 2
+PASS: LIFO: third out is 1
+PASS: head_ith(0) == 10
+PASS: head_ith(1) == 20
+PASS: head_ith(2) == 30
+PASS: tail_ith(0) == 30
+PASS: tail_ith(2) == 10
+==3326295==
+==3326295== HEAP SUMMARY:
+==3326295==     in use at exit: 96 bytes in 4 blocks
+==3326295==   total heap usage: 18 allocs, 14 frees, 1,432 bytes allocated
+==3326295==
+==3326295== 24 bytes in 1 blocks are still reachable in loss record 1 of 4
+==3326295==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326295==    by 0x402D2A: deq_new (deq.c:163)
+==3326295==    by 0x401AF5: main (main.c:106)
+==3326295==
+==3326295== 24 bytes in 1 blocks are still reachable in loss record 2 of 4
+==3326295==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326295==    by 0x40282F: put (deq.c:36)
+==3326295==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326295==    by 0x401B0A: main (main.c:107)
+==3326295==
+==3326295== 24 bytes in 1 blocks are still reachable in loss record 3 of 4
+==3326295==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326295==    by 0x40282F: put (deq.c:36)
+==3326295==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326295==    by 0x401B1B: main (main.c:108)
+==3326295==
+==3326295== 24 bytes in 1 blocks are still reachable in loss record 4 of 4
+==3326295==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326295==    by 0x40282F: put (deq.c:36)
+==3326295==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326295==    by 0x401B2C: main (main.c:109)
+==3326295==
+==3326295== LEAK SUMMARY:
+==3326295==    definitely lost: 0 bytes in 0 blocks
+==3326295==    indirectly lost: 0 bytes in 0 blocks
+==3326295==      possibly lost: 0 bytes in 0 blocks
+==3326295==    still reachable: 96 bytes in 4 blocks
+==3326295==         suppressed: 0 bytes in 0 blocks
+==3326295==
+==3326295== For lists of detected and suppressed errors, rerun with: -s
+==3326295== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: head_ith(len) out of range is fatal
+==3326296==
+==3326296== HEAP SUMMARY:
+==3326296==     in use at exit: 96 bytes in 4 blocks
+==3326296==   total heap usage: 18 allocs, 14 frees, 1,432 bytes allocated
+==3326296==
+==3326296== 24 bytes in 1 blocks are still reachable in loss record 1 of 4
+==3326296==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326296==    by 0x402D2A: deq_new (deq.c:163)
+==3326296==    by 0x401AF5: main (main.c:106)
+==3326296==
+==3326296== 24 bytes in 1 blocks are still reachable in loss record 2 of 4
+==3326296==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326296==    by 0x40282F: put (deq.c:36)
+==3326296==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326296==    by 0x401B0A: main (main.c:107)
+==3326296==
+==3326296== 24 bytes in 1 blocks are still reachable in loss record 3 of 4
+==3326296==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326296==    by 0x40282F: put (deq.c:36)
+==3326296==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326296==    by 0x401B1B: main (main.c:108)
+==3326296==
+==3326296== 24 bytes in 1 blocks are still reachable in loss record 4 of 4
+==3326296==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326296==    by 0x40282F: put (deq.c:36)
+==3326296==    by 0x402F01: deq_tail_put (deq.c:178)
+==3326296==    by 0x401B2C: main (main.c:109)
+==3326296==
+==3326296== LEAK SUMMARY:
+==3326296==    definitely lost: 0 bytes in 0 blocks
+==3326296==    indirectly lost: 0 bytes in 0 blocks
+==3326296==      possibly lost: 0 bytes in 0 blocks
+==3326296==    still reachable: 96 bytes in 4 blocks
+==3326296==         suppressed: 0 bytes in 0 blocks
+==3326296==
+==3326296== For lists of detected and suppressed errors, rerun with: -s
+==3326296== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: head_ith(-1) negative index is fatal
+PASS: ith() does not mutate the deque
+PASS: rem: value not present returns 0
+PASS: rem: failed removal does not change len
+PASS: rem: remove head value returns 1
+PASS: rem: new head is 2 after removing old head
+PASS: rem: remove tail value returns 4
+PASS: rem: new tail is 3 after removing old tail
+PASS: rem: remove middle-ish value returns 3
+PASS: rem: len==1 after removing down to one node
+PASS: rem: remove last remaining node returns 2
+PASS: rem: len==0 after removing last node
+==3326297==
+==3326297== HEAP SUMMARY:
+==3326297==     in use at exit: 24 bytes in 1 blocks
+==3326297==   total heap usage: 23 allocs, 22 frees, 1,552 bytes allocated
+==3326297==
+==3326297== 24 bytes in 1 blocks are still reachable in loss record 1 of 1
+==3326297==    at 0x484782F: malloc (vg_replace_malloc.c:447)
+==3326297==    by 0x402D2A: deq_new (deq.c:163)
+==3326297==    by 0x401F57: main (main.c:123)
+==3326297==
+==3326297== LEAK SUMMARY:
+==3326297==    definitely lost: 0 bytes in 0 blocks
+==3326297==    indirectly lost: 0 bytes in 0 blocks
+==3326297==      possibly lost: 0 bytes in 0 blocks
+==3326297==    still reachable: 24 bytes in 1 blocks
+==3326297==         suppressed: 0 bytes in 0 blocks
+==3326297==
+==3326297== For lists of detected and suppressed errors, rerun with: -s
+==3326297== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+PASS: get after draining via rem is fatal (empty deque)
+PASS: interleave: index0==1
+PASS: interleave: index1==2
+PASS: interleave: index2==3
+PASS: interleave: index3==4
+PASS: deq_str produces "7 8 9"
+deq_str result: "7 8 9"
+
+===== 40 PASSED, 0 FAILED =====
+==3326285==
+==3326285== HEAP SUMMARY:
+==3326285==     in use at exit: 0 bytes in 0 blocks
+==3326285==   total heap usage: 42 allocs, 42 frees, 2,177 bytes allocated
+==3326285==
+==3326285== All heap blocks were freed -- no leaks are possible
+==3326285==
+==3326285== For lists of detected and suppressed errors, rerun with: -s
+==3326285== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis %=)$ make clean
+GNUmakefile:9: warning: overriding recipe for target 'valgrind'
+../GNUmakefile:26: warning: ignoring old recipe for target 'valgrind'
+rm -f deq *.o *.d *.i try
+rm -f deq *.o *.d *.i try
+nathanmarquis659@onyx:~/A1_CS452_OS/CS453-resources/buff/classes/452/pub/hw1 (denis =)$
