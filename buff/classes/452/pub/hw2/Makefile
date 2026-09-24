@@ -11,7 +11,10 @@
 CC      = gcc
 CFLAGS  = -std=c11 -Wall -Wextra -g -O0
 SAN     = -fsanitize=address,undefined
-LDLIBS  =
+# onyx: /usr/lib64 is missing libubsan.so.1 (libgcc package incomplete), so
+# the shared-UBSan link script fails; link the static UBSan runtime from the
+# gcc tree instead. No-op for the unsanitized deq_demo target.
+LDLIBS  = -static-libubsan
 
 LIBOBJS = utils.o bm.o bbm.o freelist.o balloc.o
 
