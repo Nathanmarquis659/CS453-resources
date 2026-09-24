@@ -1,6 +1,13 @@
 #ifndef UTILS_H
-#define UTILS_H
 
+#define UTILS_H
+// _GNU_SOURCE: MAP_ANONYMOUS is a GNU/BSD extension, not POSIX, so it is
+// hidden by <sys/mman.h> under -std=c11 (strict ISO C); _GNU_SOURCE pulls it
+// in. Same pattern as deq.c and tests.c.
+#define _GNU_SOURCE
+
+#include <stdlib.h>
+#include <sys/mman.h>
 #include <stdio.h>
 
 static const int bitsperbyte=8;
