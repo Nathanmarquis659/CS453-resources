@@ -1,0 +1,5 @@
+cd /tmp
+pwd > hw3_pwd.txt
+cat hw3_pwd.txt
+rm hw3_pwd.txt
+exit

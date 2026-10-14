@@ -1,0 +1,2 @@
+head -c 1000000 /dev/zero | cat | wc -c
+exit

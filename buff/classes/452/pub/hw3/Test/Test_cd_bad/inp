@@ -1,0 +1,4 @@
+cd /no/such/dir
+cd /tmp
+pwd
+exit

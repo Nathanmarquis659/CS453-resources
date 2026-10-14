@@ -1,0 +1,4 @@
+echo data > tmp_a.txt
+cat < tmp_a.txt
+rm tmp_a.txt
+exit

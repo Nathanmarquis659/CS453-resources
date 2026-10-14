@@ -1,0 +1,5 @@
+echo alpha > tmp_c.txt
+cat < tmp_c.txt > tmp_d.txt
+cat tmp_d.txt
+rm tmp_c.txt tmp_d.txt
+exit

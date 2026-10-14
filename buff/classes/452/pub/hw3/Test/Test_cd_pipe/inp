@@ -1,0 +1,4 @@
+cd /etc | pwd > /dev/null
+cd /tmp
+pwd
+exit

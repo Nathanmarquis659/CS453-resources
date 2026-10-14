@@ -18,8 +18,16 @@ struct T_pipeline {
   T_pipeline pipeline;
 };
 
+// A command is words plus optional redirections. Per the grammar, redir is
+// one of: empty, < word, > word, or < word > word.
+struct T_redir {
+  char *in;			/* from "< word", or 0 */
+  char *out;			/* from "> word", or 0 */
+};
+
 struct T_command {
   T_words words;
+  struct T_redir redir;
 };
 
 struct T_words {

@@ -1,9 +1,23 @@
 #!/bin/bash
+# Regression tester.  Usage (from the assignment3 directory):  Test/run shell
+#
+# For every Test/Test_*/ directory: feed `inp` to the shell, save what it
+# printed in `out`, and compare with the expected output `exp` (ignoring
+# whitespace differences). stderr is not compared; it still shows on screen.
+# Exits non-zero if any test fails.
 
 prg=./$1
+failed=0
 
 for t in Test/Test_* ; do
-    echo ${t##*/}
-    $prg <$t/inp 2>&1 >$t/out
-    diff -q -w $t/exp $t/out 2>&1 >/dev/null || echo ${t##*/} failed >&2
+    name=${t##*/}
+    $prg < $t/inp > $t/out
+    if diff -q -w $t/exp $t/out > /dev/null ; then
+        echo "PASS $name"
+    else
+        echo "FAIL $name" >&2
+        failed=$((failed + 1))
+    fi
 done
+
+[ $failed -eq 0 ]

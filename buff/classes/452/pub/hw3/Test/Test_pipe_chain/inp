@@ -1,0 +1,2 @@
+echo a b c | wc -w | head -n 1
+exit

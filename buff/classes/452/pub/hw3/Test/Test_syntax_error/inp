@@ -1,0 +1,5 @@
+echo a >
+echo b | 
+echo a > f1 > f2
+echo still alive
+exit

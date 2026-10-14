@@ -1,0 +1,4 @@
+echo out > tmp_b.txt
+cat tmp_b.txt
+rm tmp_b.txt
+exit

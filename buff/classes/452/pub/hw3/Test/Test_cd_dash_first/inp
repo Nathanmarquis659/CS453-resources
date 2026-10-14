@@ -1,0 +1,7 @@
+/bin/pwd -P > /tmp/hw3_start
+cd /etc
+cd -
+/bin/pwd -P > /tmp/hw3_back
+cat /tmp/hw3_start /tmp/hw3_back | sort -u | wc -l
+rm /tmp/hw3_start /tmp/hw3_back
+exit

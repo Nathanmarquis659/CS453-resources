@@ -1,3 +1,14 @@
+// Interpreter.c -- walks a parse tree (Tree.h) and builds the runnable
+// objects from it, then runs them:
+//
+//     tree node       ->   runnable object
+//     T_sequence      ->   Sequence   (list of Pipelines)
+//     T_pipeline      ->   Pipeline   (list of Commands)
+//     T_command       ->   Command    (argv + redirections)
+//
+// The parse tree only *describes* the input; these objects know how to
+// actually run it.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,39 +18,26 @@
 #include "Pipeline.h"
 #include "Command.h"
 
-static Command i_command(T_command t);
-static void i_pipeline(T_pipeline t, Pipeline pipeline);
-static void i_sequence(T_sequence t, Sequence sequence);
-
-static Command i_command(T_command t) {
-  if (!t)
-    return 0;
-  Command command=0;
-  if (t->words)
-    command=newCommand(t->words);
-  return command;
-}
-
+// Add every command of the tree pipeline `t` to the runnable `pipeline`.
 static void i_pipeline(T_pipeline t, Pipeline pipeline) {
-  if (!t)
-    return;
-  addPipeline(pipeline,i_command(t->command));
-  i_pipeline(t->pipeline,pipeline);
+  for (; t; t = t->pipeline)		// the tree is a linked list of commands
+    addPipeline(pipeline, newCommand(t->command->words, t->command->redir));
 }
 
+// Add every pipeline of the tree sequence `t` to the runnable `sequence`.
 static void i_sequence(T_sequence t, Sequence sequence) {
-  if (!t)
-    return;
-  Pipeline pipeline=newPipeline(1);
-  i_pipeline(t->pipeline,pipeline);
-  addSequence(sequence,pipeline);
-  i_sequence(t->sequence,sequence);
+  for (; t; t = t->sequence) {
+    // A pipeline ended by "&" runs in the background; ";" or nothing means
+    // the shell waits for it.
+    int fg = !(t->op && !strcmp(t->op, "&"));
+    Pipeline pipeline = newPipeline(fg);
+    i_pipeline(t->pipeline, pipeline);
+    addSequence(sequence, pipeline);
+  }
 }
 
 extern void interpretSequence(T_sequence s, int *eof, Jobs jobs) {
-  if (!s)
-    return;
-  Sequence sequence=newSequence();
-  i_sequence(s,sequence);
-  execSequence(sequence,jobs,eof);
+  Sequence sequence = newSequence();
+  i_sequence(s, sequence);
+  execSequence(sequence, jobs, eof);	// runs it, then frees it
 }
