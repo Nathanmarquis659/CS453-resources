@@ -42,6 +42,10 @@
 *.cproject
 *.project
 
+#Intellij
+.idea
+.idea/
+
 #
 C-examples/intro/cmdline
 C-examples/intro/cmdline-str
